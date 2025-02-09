@@ -15,4 +15,13 @@ router.get("/home",(req,res)=>{
 
 })
 
+router.get('/realtimeproducts',(req,res)=>{
+
+    const misProductos = fs.readFileSync(rutaProcutos,'utf-8')
+    const data = JSON.parse(misProductos)
+
+    res.render('realTimeProducts',{data})
+
+})
+
 export default router 

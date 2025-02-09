@@ -16,6 +16,14 @@ const serverHttp = app.listen(8080,()=>{
 
 const webSocketServer = new Server(serverHttp)
 
+app.use((req,res,next)=>{
+
+    req.ioServ = webSocketServer;
+    next()
+
+})
+
+
 app.engine('handlebars',handlebars.engine())
 app.set('views',path.join(process.cwd(), "src", "views")) // _dirname + "/views"
 app.set('view engine','handlebars')
@@ -29,8 +37,13 @@ app.use("/api/productos",routeProductos)
 app.use("/api/carts",routeCarrito)
 app.use("/",routeViews)
 
+
+
 webSocketServer.on('connection',(socket)=>{
     console.log("NUEVO DISPOSITIVO CONECTADO: ",socket.id)
 
+    socket.on('eliminarProductoServidor',(data)=>{
+        webSocketServer.emit('actualizarProductos',data)
+    })
 
 })

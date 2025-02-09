@@ -83,6 +83,9 @@ routeProductos.post("/",(req,res)=>{
 
     fs.writeFileSync(rutaProcutos,JSON.stringify(data,null,4))
 
+
+    //req.io.emit()
+
     res.send(data)
 
 })
@@ -171,6 +174,9 @@ routeProductos.delete("/:pid",(req,res)=>{
             })
     
             fs.writeFileSync(rutaProcutos,JSON.stringify(filtradoEliminar,null,4))
+            
+            req.ioServ.emit('eliminarProducto',filtradoEliminar)
+            
             return res.send(`ID ${pid} ELIMINADO CON EXITO`)
         }
         else {

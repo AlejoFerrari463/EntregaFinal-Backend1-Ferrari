@@ -20,16 +20,5 @@
         "stock": 180,
         "category": "remeras",
         "thumbnails": "images/remeras1.jpg"
-    },
-    {
-        "id": 3,
-        "title": "Campera Puma",
-        "description": "Campera rompeviento anti-agua",
-        "code": "RVV787",
-        "price": 75000,
-        "status": true,
-        "stock": 420,
-        "category": "camperas",
-        "thumbnails": "images/camperas1.jpg"
     }
 ]
