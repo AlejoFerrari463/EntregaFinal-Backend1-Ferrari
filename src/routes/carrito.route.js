@@ -41,8 +41,10 @@ routeCarrito.post("/",(req,res)=>{
     const misCarritos = fs.readFileSync(rutaCarritos,'utf-8')
     const data = JSON.parse(misCarritos)
 
+    const { products } = req.body;
+
     const proximoId = data.length > 0 ? Math.max(...data.map((item)=>{return item.id})) + 1: 1 
-    data.push({id: proximoId,products: []})
+    data.push({id: proximoId,products: products})
 
     fs.writeFileSync(rutaCarritos,JSON.stringify(data,null,4))
 

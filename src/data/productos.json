@@ -8,7 +8,9 @@
         "status": true,
         "stock": 80,
         "category": "calzado",
-        "thumbnails": "images/zapatillas1.jpg"
+        "thumbnails": [
+            "images/zapatillas1.jpg"
+        ]
     },
     {
         "id": 2,
@@ -19,6 +21,34 @@
         "status": true,
         "stock": 180,
         "category": "remeras",
-        "thumbnails": "images/remeras1.jpg"
+        "thumbnails": [
+            "images/remeras1.jpg"
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Campera Puma",
+        "description": "Campera rompeviento anti-agua",
+        "code": "RVV787",
+        "price": 75000,
+        "status": true,
+        "stock": 420,
+        "category": "camperas",
+        "thumbnails": [
+            "images/camperas1.jpg"
+        ]
+    },
+    {
+        "id": 4,
+        "title": "Gorra Nike",
+        "description": "Gorra ajustable con tecnología Dri-FIT para mayor comodidad.",
+        "code": "GRN999",
+        "price": 25000,
+        "status": true,
+        "stock": 320,
+        "category": "gorras",
+        "thumbnails": [
+            "images/gorras1.jpg"
+        ]
     }
 ]
