@@ -11,7 +11,23 @@ ioCliente.on('eliminarProducto',(data)=>{
 
 })
 
+ioCliente.on('agregarProducto',(data)=>{
+
+    ioCliente.emit('agregarProductoServidor',data)
+
+})
+
 ioCliente.on('actualizarProductos',(data)=>{
+
+    Toastify({
+        text: `Producto agregado/eliminado`,
+        duration: 5000,
+        gravity: "top", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        style: {
+          background: "linear-gradient(to right, #00b09b, #96c93d)",
+        },
+      }).showToast();
 
     const contenedorProds = document.querySelector("#contenedor-cards")
     contenedorProds.innerHTML = ``
@@ -38,7 +54,7 @@ ioCliente.on('actualizarProductos',(data)=>{
 
 
         titulo.innerText = `${element.title}`
-        precio.innerText = `${element.price}`
+        precio.innerText = `$${element.price}`
         descripcion.innerText = `${element.description}`
 
         cardBody.appendChild(titulo)
@@ -51,6 +67,7 @@ ioCliente.on('actualizarProductos',(data)=>{
 
 
         contenedorProds.appendChild(col)
+
 
     });
 

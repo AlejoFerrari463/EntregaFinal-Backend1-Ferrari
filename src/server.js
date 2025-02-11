@@ -45,5 +45,8 @@ webSocketServer.on('connection',(socket)=>{
     socket.on('eliminarProductoServidor',(data)=>{
         webSocketServer.emit('actualizarProductos',data)
     })
+    socket.on('agregarProductoServidor',(data)=>{
+        webSocketServer.emit('actualizarProductos',data)
+    })
 
 })

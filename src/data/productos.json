@@ -21,9 +21,7 @@
         "status": true,
         "stock": 180,
         "category": "remeras",
-        "thumbnails": [
-            "images/remeras1.jpg"
-        ]
+        "thumbnails": "images/remeras1.jpg"
     },
     {
         "id": 3,
@@ -34,12 +32,36 @@
         "status": true,
         "stock": 420,
         "category": "camperas",
-        "thumbnails": [
-            "images/camperas1.jpg"
-        ]
+        "thumbnails": "images/camperas1.jpg"
     },
     {
         "id": 4,
+        "title": "Short Deportivo",
+        "description": "Short ligero y transpirable para entrenamientos intensos.",
+        "code": "SHD555",
+        "price": 45000,
+        "status": true,
+        "stock": 150,
+        "category": "shorts",
+        "thumbnails": [
+            "images/shorts1.jpg"
+        ]
+    },
+    {
+        "id": 5,
+        "title": "Buzo Canguro",
+        "description": "Buzo con capucha y bolsillo canguro, ideal para el frío.",
+        "code": "BZC222",
+        "price": 60000,
+        "status": true,
+        "stock": 230,
+        "category": "buzos",
+        "thumbnails": [
+            "images/buzos1.jpg"
+        ]
+    },
+    {
+        "id": 6,
         "title": "Gorra Nike",
         "description": "Gorra ajustable con tecnología Dri-FIT para mayor comodidad.",
         "code": "GRN999",

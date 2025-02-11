@@ -1,9 +1,9 @@
-<h1>NUESTROS PRODUCTOS IN REAL TIME</h1>
+<h1 class="text-center mt-4 mb-5" >NUESTROS PRODUCTOS IN REAL TIME</h1>
 
 <div id="contenedor-cards" class="row row-cols-1 row-cols-md-3 g-4">
 {{#if data}}
     {{#each data}}
-     <div class="col">
+     <div class="col text-center">
         <div class="card h-100">
             {{!-- <img src="..." class="card-img-top" alt="..."> --}}
             <div class="card-body">
@@ -17,5 +17,6 @@
 {{/if}}
 </div>
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="js/index.js"></script>

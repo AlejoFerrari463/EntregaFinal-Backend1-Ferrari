@@ -81,10 +81,10 @@ routeProductos.post("/",(req,res)=>{
 
     data.push(nuevoProducto)
 
+    
     fs.writeFileSync(rutaProcutos,JSON.stringify(data,null,4))
 
-
-    //req.io.emit()
+    req.ioServ.emit('agregarProducto',data)
 
     res.send(data)
 
