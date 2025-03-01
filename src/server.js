@@ -8,20 +8,9 @@ import path from 'path'
 import handlebars from "express-handlebars"
 import { Server } from "socket.io";
 
+import { mongoConnection } from "./connections/mongo.js";
+
 const app = express();
-
-const serverHttp = app.listen(8080,()=>{
-    console.log("PRE ENTREGA 2 ANDANDO")
-})
-
-const webSocketServer = new Server(serverHttp)
-
-app.use((req,res,next)=>{
-
-    req.ioServ = webSocketServer;
-    next()
-
-})
 
 
 app.engine('handlebars',handlebars.engine())
@@ -37,16 +26,8 @@ app.use("/api/productos",routeProductos)
 app.use("/api/carts",routeCarrito)
 app.use("/",routeViews)
 
+mongoConnection()
 
-
-webSocketServer.on('connection',(socket)=>{
-    console.log("NUEVO DISPOSITIVO CONECTADO: ",socket.id)
-
-    socket.on('eliminarProductoServidor',(data)=>{
-        webSocketServer.emit('actualizarProductos',data)
-    })
-    socket.on('agregarProductoServidor',(data)=>{
-        webSocketServer.emit('actualizarProductos',data)
-    })
-
+app.listen(8080, ( ) => {
+    console.log("SERVER ON")
 })
