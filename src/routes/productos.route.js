@@ -1,38 +1,64 @@
 import { Router } from "express";
 
-import fs from "node:fs"
-
-
-const rutaProcutos = "./src/data/productos.json"
-
-
 const routeProductos = Router();
 
 import productsModel from "../models/products.model.js";
 
 routeProductos.get("/", async (req,res)=>{
 
-    const result = await productsModel.find()
 
+    let {limit,page,query,sort} = req.query
 
-     let {limit,page,query,sort} = req.query
-
-     if(!limit){
+    if(!limit){
         limit = 10
-     }
+    }
 
-     if(!page){
+    if(!page){
         page = 1
-     }
-     if(!sort){
+    }
+
+    if(!sort){
         sort = {}
-     }
-     if(!query){
+    }
+    else {
+
+        if(sort=="asc"){
+            sort = {price: 1}
+        }
+
+        else {
+            sort = {price: -1}
+        }
+    }
+
+    if(!query){
         query = {}
-     }
+    }
+    else {
+        query = {category: query}
+    }
+
+    const result = await productsModel.paginate(query,{limit, page, sort})
+
+    let prevLink, nextLink;
+
+    if(result.hasPrevPage){
+        prevLink = `http://localhost:8080/api/productos?page=${result.prevPage}&limit=${limit}`
+    }
+    else {
+        prevLink = null
+    }
+
+    if(result.hasNextPage){
+        nextLink = `http://localhost:8080/api/productos?page=${result.nextPage}&limit=${limit}`
+
+    }
+    else {
+        nextLink = null
+    }
 
 
-    res.json({mensaje: "Get de productos",payload: result,prueba: {limit, page,sort,query}})
+    res.json({status: "Get de productos",payload: result.docs, totalPages: result.totalPages, prevPage: result.prevPage, nextPage: result.nextPage, page: result.page, hasPrevPage: result.hasPrevPage, hasNextPage: result.hasNextPage, prevLink, nextLink})
 
 })
 
