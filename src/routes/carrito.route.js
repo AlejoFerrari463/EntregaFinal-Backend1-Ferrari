@@ -1,139 +1,101 @@
 import { Router } from "express";
 
-import fs from "node:fs"
-
-const rutaCarritos = "./src/data/carrito.json"
-const rutaProcutos = "./src/data/productos.json"
 
 const routeCarrito = Router()
 
+import cartsModel from "../models/carts.model.js";
+import productsModel from "../models/products.model.js";
 
-routeCarrito.get("/:cid",(req,res)=>{
+
+routeCarrito.get("/:cid",async(req,res)=>{
 
     const idCarro = req.params.cid
 
-    const misCarritos = fs.readFileSync(rutaCarritos,'utf-8')
-    const data = JSON.parse(misCarritos)
-
-    const proximoId = data.length > 0 ? Math.max(...data.map((item)=>{return item.id})) + 1: 1 
-    console.log("PROXIMO ID: "+proximoId)
-    if(idCarro){
-
-        const obtenerCarro = data.find((item)=>{
-            return item.id == idCarro
-        })
-
-        if(obtenerCarro){
-            return res.send(obtenerCarro.products)
-        }
-        else {
-            return res.send("NO EXISTE ESE ID DE CARRITO")
-        }
-
+    try {
+        const result = await cartsModel.findById(idCarro)
+        return res.json({mensaje: "Get de carrito",payload: result})
+    } catch (error) {
+        return res.json({mensaje: "No existe ese id de carrito", errorFue: error})
     }
-
-    res.send(obtenerCarro.products)
 
 })
 
-routeCarrito.post("/",(req,res)=>{
-
-    const misCarritos = fs.readFileSync(rutaCarritos,'utf-8')
-    const data = JSON.parse(misCarritos)
+routeCarrito.post("/",async (req,res)=>{
 
     const { products } = req.body;
 
-    const proximoId = data.length > 0 ? Math.max(...data.map((item)=>{return item.id})) + 1: 1 
-    data.push({id: proximoId,products: products})
-
-    fs.writeFileSync(rutaCarritos,JSON.stringify(data,null,4))
-
-    res.send(data)
+    if(products){
+        const result = await cartsModel.insertOne({products: products})
+        return res.json({mensaje: "Post de carritos",payload: result})
+    }
+    else {
+        const result = await cartsModel.insertOne({products: []})
+        return res.json({mensaje: "Post de carritos",payload: result})
+    }
 
 })
 
-routeCarrito.post("/:cid/product/:pid",(req,res)=>{
+routeCarrito.post("/:cid/product/:pid",async (req,res)=>{
 
     const {cid,pid} = req.params
 
-    const misCarritos = fs.readFileSync(rutaCarritos,'utf-8')
-    const dataCarrito = JSON.parse(misCarritos)
+    let carrito;
 
+    try {
+        carrito = await cartsModel.findById(cid)
+    } catch (error) {
+        return res.json({mensaje: "No existe ese id de carrito", errorFue: error})
+    }
 
-    const misProductos = fs.readFileSync(rutaProcutos,'utf-8')
-    const dataProductos= JSON.parse(misProductos)
+    const existeProducto = carrito.products.find((item)=>{
+        return pid == item.idProduct
+    })
 
-    if(cid){
+    if(!existeProducto){
 
-        const buscarCarrito = dataCarrito.find((item)=>{
-            return item.id == cid
-        })
-        // SI EXISTE ESE ID CARRITO
-        if(buscarCarrito){
+        carrito.products.push({idProduct: pid,quantity: 1})
 
-            const buscarProducto = dataProductos.find((item)=>{
-                return item.id == pid
-            })
-            // SI EXISTE ESE ID PRODUCTO
-            if(buscarProducto){
+        const result = await cartsModel.findByIdAndUpdate(cid,carrito,{new: true})
+        return res.json({mensaje: "Agregar producto a carrito", miCarro: result})
 
-                const existeYaProdEnCarro = buscarCarrito.products.find((item)=>{
-                    return item.idProduct == pid
-                })
+    }
+    else {
 
-                // SI YA EXISTE EN EL CARRITO
-                if(existeYaProdEnCarro){
-
-                    // BUSCO EL INDICE DEL PRODUCTO YA EN PRODUCTS
-                    const indiceDeProductoEnCarrito = buscarCarrito.products.findIndex((item)=>{
-                        return item.idProduct == pid
-                    })
-
-                    // PRODUCTS EN CARRITO YA ACTUALIZADO
-                    existeYaProdEnCarro.quantity+=1  
-                    buscarCarrito.products[indiceDeProductoEnCarrito] = existeYaProdEnCarro
-                    //console.log(buscarCarrito)
-
-                    const encontrarIndiceCarrito = dataCarrito.findIndex((item)=>{
-                        return item.id == cid
-                    })
-                    dataCarrito[encontrarIndiceCarrito] = buscarCarrito
-                    fs.writeFileSync(rutaCarritos,JSON.stringify(dataCarrito,null,4))
-                    return res.send("CANTIDAD DEL PRODUCTO ACTUALIZADA")
-                }
-
-                // SI NO EXISTE EN EL CARRITO
-                else {
-
-                    buscarCarrito.products.push({idProduct: parseInt(pid),quantity: 1})
-                    const encontrarIndiceCarrito = dataCarrito.findIndex((item)=>{
-                        return item.id == cid
-                    })
-
-                    dataCarrito[encontrarIndiceCarrito] = buscarCarrito
-                    fs.writeFileSync(rutaCarritos,JSON.stringify(dataCarrito,null,4))
-                    return res.send("NUEVO PRODUCTO AGREGADO")
-                }
-
-                
-
-                return res.send(buscarCarrito)
-
-            }
-             // SI NO EXISTE ESE ID PRODUCTO
-            else {
-                return res.send("NO EXISTE ESE ID DE PRODUCTO")
-            }
-
-        }
-        // SI NO EXISTE ESE ID CARRITO
-        else {
-            return res.send("NO EXISTE ESE ID DE CARRITO")
-        }
+        carrito.products[0].quantity += 1
+        const result = await cartsModel.findByIdAndUpdate(cid,carrito,{new: true})
+        return res.json({mensaje: "Agregar producto a carrito", miCarro: result})
 
     }
 
-    res.send(dataCarrito)
+   
+})
+
+
+routeCarrito.delete("/:cid/product/:pid",async (req,res)=>{
+
+    const {cid,pid} = req.params
+
+    let carrito;
+
+    try {
+        carrito = await cartsModel.findById(cid)
+    } catch (error) {
+        return res.json({errorFue: error})
+    }
+
+    const filtrarCarro = carrito.products.filter((item)=>{
+        return item.idProduct != pid
+    })
+
+    carrito.products = filtrarCarro
+
+    try {
+        const result = await cartsModel.findByIdAndUpdate(cid,carrito,{new: true})
+        return res.json({mensaje: "Eliminar producto de carrito", miCarroActualizado: result})
+    } catch (error) {
+        return res.json({mensaje: "No existe ese id de carrito"})
+    }
+
 
 })
 

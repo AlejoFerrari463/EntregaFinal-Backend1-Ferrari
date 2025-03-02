@@ -69,12 +69,11 @@ routeProductos.get("/:pid",async(req,res)=>{
 
     try {
         const result = await productsModel.findById(pid)
-        return res.json({mensaje: "Post de productos",payload: result})
+        return res.json({mensaje: "Get de producto especifico",payload: result})
     } catch (error) {
         return res.json({errorFue: error})
     }
 
-  
     
 })
 
