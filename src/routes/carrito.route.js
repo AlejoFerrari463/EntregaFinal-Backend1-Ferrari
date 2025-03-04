@@ -1,10 +1,8 @@
 import { Router } from "express";
 
-
 const routeCarrito = Router()
 
 import cartsModel from "../models/carts.model.js";
-import productsModel from "../models/products.model.js";
 
 
 routeCarrito.get("/:cid",async(req,res)=>{
@@ -12,7 +10,7 @@ routeCarrito.get("/:cid",async(req,res)=>{
     const idCarro = req.params.cid
 
     try {
-        const result = await cartsModel.findById(idCarro)
+        const result = await cartsModel.findById(idCarro).populate("products.idProduct")
         return res.json({mensaje: "Get de carrito",payload: result})
     } catch (error) {
         return res.json({mensaje: "No existe ese id de carrito", errorFue: error})

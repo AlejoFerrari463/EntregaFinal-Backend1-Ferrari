@@ -1,27 +1,19 @@
 import { Router } from "express";
 
-import fs from "node:fs"
+
 
 const router = Router()
 
-const rutaProcutos = "./src/data/productos.json"
 
-router.get("/home",(req,res)=>{
+router.get("/products",async(req,res)=>{
 
-    const misProductos = fs.readFileSync(rutaProcutos,'utf-8')
-    const data = JSON.parse(misProductos)
 
-    res.render('home',{data})
+    // res.json({status: "Get de productos",payload: result.docs, totalPages: result.totalPages, prevPage: result.prevPage, nextPage: result.nextPage, page: result.page, hasPrevPage: result.hasPrevPage, hasNextPage: result.hasNextPage, prevLink, nextLink})
 
-})
-
-router.get('/realtimeproducts',(req,res)=>{
-
-    const misProductos = fs.readFileSync(rutaProcutos,'utf-8')
-    const data = JSON.parse(misProductos)
-
-    res.render('realTimeProducts',{data})
+    res.render("index",{})
 
 })
+
+
 
 export default router 

@@ -1,75 +1,69 @@
 
-const ioCliente = io()
+const urlParams = new URLSearchParams(window.location.search);
 
-ioCliente.on('connect', () => {
-    console.log("Cliente conectado al servidor WebSocket");
-});
+let limit = urlParams.get('limit');
+let page = urlParams.get('page');
+let sort = urlParams.get('sort');
+let query = urlParams.get('query');
 
-ioCliente.on('eliminarProducto',(data)=>{
 
-    ioCliente.emit('eliminarProductoServidor',data)
 
-})
 
-ioCliente.on('agregarProducto',(data)=>{
+let apiUrl = `http://localhost:8080/api/productos?limit=${limit}&page=${page}&sort=${sort}`;
 
-    ioCliente.emit('agregarProductoServidor',data)
+if (query) {
+    apiUrl += `&query=${query}`;
+}
 
-})
+fetch(apiUrl)
+    .then((res) => {
+        return res.json();
+    })
+    .then((info) => {
 
-ioCliente.on('actualizarProductos',(data)=>{
+        console.log(info.data.payload)
 
-    Toastify({
-        text: `Producto agregado/eliminado`,
-        duration: 5000,
-        gravity: "top", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
-        style: {
-          background: "linear-gradient(to right, #00b09b, #96c93d)",
-        },
-      }).showToast();
+        const contenedorCards = document.querySelector("#contenedor-cards")
 
-    const contenedorProds = document.querySelector("#contenedor-cards")
-    contenedorProds.innerHTML = ``
+        info.data.payload.forEach((element) => {
 
-    data.forEach(element => {
+            const col = document.createElement("div")
+            col.classList.add("col","mb-5")
+
+            const card = document.createElement("card")
+            card.classList.add("card","h-100",)
+
+            card.innerHTML=`
+            
+                <img src="${element.thumbnails[0]}" class="card-img-top" alt="${element.title}">
+                <div class="card-body">
+                    <h5 class="card-title">${element.title}</h5>
+                    <h5 class="card-title fw-bold">$${element.price}</h5>
+                </div>
+                <button class="boton-comprar" id=${element._id} >COMPRAR</button
+            
+            `
+            
+            col.appendChild(card)
+
+            contenedorCards.appendChild(col)
+         
+
+        });
+
         
-        const col = document.createElement("div")
-        col.classList.add("col")
+        const botonesComprar = document.querySelectorAll(".boton-comprar")
 
-        const card = document.createElement("div")
-        card.classList.add("card","h-100")
+        botonesComprar.forEach((element)=>{
+            element.addEventListener("click",()=>{
+                alert("Comprando elemento ID: "+element.id)
+            })
 
-        const cardBody = document.createElement("div")
-        cardBody.classList.add("card-body")
+        })
 
-        const titulo = document.createElement("h5")
-        titulo.classList.add("card-title")
-
-        const precio = document.createElement("h5")
-        precio.classList.add("card-title")
-
-        const descripcion = document.createElement("p")
-        descripcion.classList.add("card-text")
-
-
-        titulo.innerText = `${element.title}`
-        precio.innerText = `$${element.price}`
-        descripcion.innerText = `${element.description}`
-
-        cardBody.appendChild(titulo)
-        cardBody.appendChild(precio)
-        cardBody.appendChild(descripcion)
-
-        card.appendChild(cardBody)
-
-        col.appendChild(card)
-
-
-        contenedorProds.appendChild(col)
-
-
-    });
-
-
-})
+        
+    })
+    .catch((error)=>{
+        console.log(error)
+    })
+    

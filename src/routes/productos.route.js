@@ -38,7 +38,7 @@ routeProductos.get("/", async (req,res)=>{
         query = {category: query}
     }
 
-    const result = await productsModel.paginate(query,{limit, page, sort})
+    const result = await productsModel.paginate(query,{limit, page, sort});
 
     let prevLink, nextLink;
 
@@ -57,8 +57,22 @@ routeProductos.get("/", async (req,res)=>{
         nextLink = null
     }
 
+    const data = {
+        payload: result.docs, 
+        totalPages: result.totalPages, 
+        prevPage: result.prevPage, 
+        nextPage: result.nextPage, 
+        page: result.page, 
+        hasPrevPage: result.hasPrevPage, 
+        hasNextPage: result.hasNextPage, 
+        prevLink, 
+        nextLink
+    }
 
-    res.json({status: "Get de productos",payload: result.docs, totalPages: result.totalPages, prevPage: result.prevPage, nextPage: result.nextPage, page: result.page, hasPrevPage: result.hasPrevPage, hasNextPage: result.hasNextPage, prevLink, nextLink})
+
+    res.json({status: "Get de productos", data: data})
+
+    //res.render("index",{data: true})
 
 })
 
