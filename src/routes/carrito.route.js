@@ -11,7 +11,7 @@ routeCarrito.get("/:cid",async(req,res)=>{
 
     try {
         const result = await cartsModel.findById(idCarro).populate("products.idProduct")
-        return res.json({mensaje: "Get de carrito",payload: result})
+        return res.json({mensaje: "Get de carrito",cart: result})
     } catch (error) {
         return res.json({mensaje: "No existe ese id de carrito", errorFue: error})
     }
@@ -26,7 +26,7 @@ routeCarrito.put("/:cid",async(req,res)=>{
 
     try {
         const result = await cartsModel.findByIdAndUpdate(idCarro,{products: nuevoCarro},{new: true})
-        return res.json({mensaje: "Actualizar de 0 carrito", nuevoCarro: result})
+        return res.json({mensaje: "Actualizar de 0 carrito", cart: result})
     } catch (error) {
         return res.json({errorFue: error})
     }
@@ -69,7 +69,7 @@ routeCarrito.put("/:cid/products/:pid",async(req,res)=>{
                 const nuevoArrayProds = carrito.products
                 const result = await cartsModel.findByIdAndUpdate(cid,{products: nuevoArrayProds},{new: true})
         
-                return res.json({mensaje: "Put de producto en carrito ya existente", nuevoCarro: result})
+                return res.json({mensaje: "Put de producto en carrito ya existente", cart: result})
                 
             } catch (error) {
                 return res.json({error})
@@ -97,7 +97,7 @@ routeCarrito.post("/",async (req,res)=>{
 
         try {
             const result = await cartsModel.insertOne({products: products})
-            return res.json({mensaje: "Post de carritos",payload: result})
+            return res.json({mensaje: "Post de carritos",cart: result})
         } catch (error) {
             return res.json({error})
         }
@@ -107,7 +107,7 @@ routeCarrito.post("/",async (req,res)=>{
         try {
 
             const result = await cartsModel.insertOne({products: []})
-            return res.json({mensaje: "Post de carritos",payload: result})
+            return res.json({mensaje: "Post de carritos",cart: result})
             
         } catch (error) {
             return res.json({error})
@@ -140,7 +140,7 @@ routeCarrito.post("/:cid/product/:pid",async (req,res)=>{
             carrito.products.push({idProduct: pid, quantity: 1})
             const nuevoArrayProds = carrito.products
             const result = await cartsModel.findByIdAndUpdate(cid,{products: nuevoArrayProds},{new: true})
-            return res.json({mensaje: "Post de producto en carrito sin existir", nuevoCarro: result})
+            return res.json({mensaje: "Post de producto en carrito sin existir", cart: result})
             
         } catch (error) {
             return res.json({mensaje: "qqq",error})
@@ -161,7 +161,7 @@ routeCarrito.post("/:cid/product/:pid",async (req,res)=>{
             const nuevoArrayProds = carrito.products
             const result = await cartsModel.findByIdAndUpdate(cid,{products: nuevoArrayProds},{new: true})
     
-            return res.json({mensaje: "Post de producto en carrito ya existente", nuevoCarro: result})
+            return res.json({mensaje: "Post de producto en carrito ya existente", cart: result})
             
         } catch (error) {
             return res.json({error})
@@ -190,7 +190,7 @@ routeCarrito.delete("/:cid/products/:pid",async (req,res)=>{
 
     try {
         const result = await cartsModel.findByIdAndUpdate(cid,{products: filtrarArrayProductos},{new: true})
-        return res.json({mensaje: "Eliminar producto de carrito", miCarroActualizado: result})
+        return res.json({mensaje: "Eliminar producto de carrito", cart: result})
     } catch (error) {
         return res.json({mensaje: "No existe ese id de carrito"})
     }
@@ -205,7 +205,7 @@ routeCarrito.delete("/:cid",async (req,res)=>{
     try {
 
         const result = await cartsModel.findByIdAndUpdate(cid,{products: []},{new: true})
-        return res.json({mensaje: "Eliminar todos los productos de un carrito", miCarroActualizado: result})
+        return res.json({mensaje: "Eliminar todos los productos de un carrito", cart: result})
 
     } catch (error) {
         return res.json({mensaje: "No se encontro un carrito con ese id", errorFue: error})

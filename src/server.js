@@ -6,7 +6,6 @@ import express from "express"
 import path from 'path'
 
 import handlebars from "express-handlebars"
-import { Server } from "socket.io";
 
 import { mongoConnection } from "./connections/mongo.js";
 

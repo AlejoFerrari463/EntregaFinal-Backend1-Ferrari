@@ -6,8 +6,6 @@ let sort = urlParams.get('sort');
 let query = urlParams.get('query');
 
 
-
-
 let apiUrl = `http://localhost:8080/api/productos?limit=${limit}&page=${page}&sort=${sort}`;
 if (query) {
     apiUrl += `&query=${query}`;
@@ -62,7 +60,22 @@ function cargarProductos(apiUrl) {
     
             botonesComprar.forEach((element)=>{
                 element.addEventListener("click",()=>{
-                    alert("Comprando elemento ID: "+element.id)
+
+                    const idCarro = localStorage.getItem("carrito")
+
+                    const agregarPorductoURL = `http://localhost:8080/api/carts/${idCarro}/product/${element.id}`
+                    
+                    fetch(agregarPorductoURL,{method: "POST"})
+                    .then((res)=>{
+                        return res.json()
+                    })
+                    .then((info)=>{
+                        console.log(info)
+                    })
+                    .catch((error)=>{
+                        console.log(error)
+                    })
+                    
                 })
     
             })
@@ -120,11 +133,30 @@ function actualizarBotonesPaginacion(prevPage,nextPage){
 
     }
 
-    
-
-    
 
 }
 
+function crearCarrito() {
 
+    if(localStorage.getItem("carrito")==null){
+
+        fetch("http://localhost:8080/api/carts",{method: "POST"})
+        .then((res)=>{
+            return res.json()
+        })
+        .then((info)=>{
+
+            console.log(info)
+            localStorage.setItem("carrito",info.cart._id)
+
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+
+    }
+    
+}
+
+crearCarrito()
 cargarProductos(apiUrl)

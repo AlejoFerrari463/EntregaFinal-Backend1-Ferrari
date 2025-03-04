@@ -1,0 +1,22 @@
+<h1 class="text-center mt-4 mb-5"  >TU CARRITO</h1>
+
+<div class="contenedor-carts" >
+
+    {{#if cart}}
+        {{#each cart.products}}
+
+            <div class="carts-card " >
+                <h1 class="mb-4" >Producto: {{this.idProduct.title}}</h1>
+                <h3 class="mb-4" >Precio: ${{this.idProduct.price}}</h3>
+                <h3 class="mb-4" >Cantidad: {{this.quantity}}</h3>   
+            </div>
+
+        {{/each}}
+    {{/if }}
+
+
+
+</div>
+
+
+
