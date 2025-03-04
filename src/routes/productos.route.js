@@ -22,7 +22,7 @@ routeProductos.get("/", async (req,res)=>{
     }
     else {
 
-        if(sort=="asc"){
+        if(sort=="asc" || sort == 1){
             sort = {price: 1}
         }
 
@@ -44,6 +44,16 @@ routeProductos.get("/", async (req,res)=>{
 
     if(result.hasPrevPage){
         prevLink = `http://localhost:8080/api/productos?page=${result.prevPage}&limit=${limit}`
+
+        if(sort.price){
+            prevLink+=`&sort=${sort.price}`
+        }
+
+        if(query.category){
+            prevLink+=`&query=${query.category}`
+        }
+
+
     }
     else {
         prevLink = null
@@ -51,6 +61,14 @@ routeProductos.get("/", async (req,res)=>{
 
     if(result.hasNextPage){
         nextLink = `http://localhost:8080/api/productos?page=${result.nextPage}&limit=${limit}`
+
+        if(sort.price){
+            nextLink+=`&sort=${sort.price}`
+        }
+
+        if(query.category){
+            nextLink+=`&query=${query.category}`
+        }
 
     }
     else {
